@@ -29,6 +29,7 @@
       set-option -sa terminal-overrides ",xterm*:Tc"
       set-option -g status-position top
       # set-option -g @plugin 'sainnhe/tmux-fzf'
+      set-option -g allow-passthrough on
 
       run-shell ${pkgs.tmuxPlugins.vim-tmux-navigator}/share/tmux-plugins/vim-tmux-navigator/vim-tmux-navigator.tmux
       run-shell ${pkgs.tmuxPlugins.continuum}/share/tmux-plugins/continuum/continuum.tmux
@@ -97,13 +98,33 @@
     # };
 
     initExtra = ''
+      #fzf theme
+      export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS'
+        --color=fg:#d8dee9,fg+:#e5e9f0,bg:-1,bg+:#3b4252
+        --color=hl:#5e81ac,hl+:#88c0d0,info:#a3be8c,marker:#a3be8c
+        --color=prompt:#ebcb8b,spinner:#bf616a,pointer:#ebcb8b,header:#a3be8c
+        --color=gutter:-1,border:#262626,scrollbar:#bf616a,label:#eceff4
+        --color=query:#e5e9f0
+        --border="rounded" --border-label="Search" --border-label-pos="2" --preview-window="border-rounded"
+        --prompt="~ " --marker=">" --pointer="->" --separator="─"
+        --scrollbar="│"'      
+ 
       zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
-      zstyle ':completion:*' list-colors "''${(s.:.)LS_COLORS}"
+      # set descriptions format to enable group support
+      # NOTE: don't use escape sequences here, fzf-tab will ignore them
+      zstyle ':completion:*:descriptions' format '[%d]'
+      # set list-colors to enable filename colorizing
+      zstyle ':completion:*' list-colors ''${(s.:.)LS_COLORS}
+      # force zsh not to show completion menu, which allows fzf-tab to capture the unambiguous prefix
       zstyle ':completion:*' menu no
-      #Popup for cd
-      zstyle ':fzf-tab:complete:*' fzf-command ftb-tmux-popup
-      zstyle ':fzf-tab:complete:*' popup-min-size 100 40
-      #Cool preview for files
+      # switch group using `<` and `>`
+      zstyle ':fzf-tab:*' switch-group '<' '>'
+      # Popup
+      # zstyle ':fzf-tab:complete:*' fzf-command ftb-tmux-popup
+      # zstyle ':fzf-tab:complete:*' popup-min-size 100 40
+      # Make search window bigger
+      zstyle ':fzf-tab:complete:*' fzf-min-height 20
+      # Cool preview for files
       zstyle ':fzf-tab:complete:*' fzf-preview 'if [ -d $realpath ]; then fd --color=always . $realpath; elif [ -f $realpath ]; then bat --color=always --theme=Nord $realpath; fi'
       #Systemctl status shower      
       zstyle ':fzf-tab:complete:systemctl-*:*' fzf-preview 'SYSTEMD_COLORS=1 systemctl status $word'
@@ -126,7 +147,7 @@
       tmux \
         new-session -s "Main" \; \
         split-window "gotop ; read" \; \
-        select-layout "$(cat nixos/homeManager/modules/terminal/tmux-default-layout)" \; \
+        select-layout "$(cat ~/nixos/homeManager/modules/terminal/tmux-default-layout)" \; \
         select-pane -t 0
     ''; 
     
