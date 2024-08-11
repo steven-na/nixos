@@ -101,8 +101,8 @@
       zstyle ':completion:*' list-colors "''${(s.:.)LS_COLORS}"
       zstyle ':completion:*' menu no
       #Popup for cd
-      zstyle ':fzf-tab:complete:cd:*' fzf-command ftb-tmux-popup
-      zstyle ':fzf-tab:complete:cd:*' popup-min-size 80 25
+      zstyle ':fzf-tab:complete:*' fzf-command ftb-tmux-popup
+      zstyle ':fzf-tab:complete:*' popup-min-size 100 40
       #Cool preview for files
       zstyle ':fzf-tab:complete:*' fzf-preview 'if [ -d $realpath ]; then fd --color=always . $realpath; elif [ -f $realpath ]; then bat --color=always --theme=Nord $realpath; fi'
       #Systemctl status shower      
