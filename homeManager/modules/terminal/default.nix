@@ -9,6 +9,9 @@
     # pkgs.tmuxPlugins.tmux-fzf
     pkgs.tmuxPlugins.nord
     pkgs.tmuxPlugins.yank
+
+    pkgs.bat
+    pkgs.fd
   ];
 
   programs.tmux = {
@@ -97,8 +100,20 @@
       zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
       zstyle ':completion:*' list-colors "''${(s.:.)LS_COLORS}"
       zstyle ':completion:*' menu no
-      zstyle ':fzf-tab:complete:cd:*' fzf-preview '[ -d $realpath ] && ls $realpath || [ -f $realpath ] && bat $realpath'
-      
+      #Popup for cd
+      zstyle ':fzf-tab:complete:cd:*' fzf-command ftb-tmux-popup
+      zstyle ':fzf-tab:complete:cd:*' popup-min-size 80 25
+      #Cool preview for files
+      zstyle ':fzf-tab:complete:*' fzf-preview 'if [ -d $realpath ]; then fd --color=always . $realpath; elif [ -f $realpath ]; then bat --color=always --theme=Nord $realpath; fi'
+      #Systemctl status shower      
+      zstyle ':fzf-tab:complete:systemctl-*:*' fzf-preview 'SYSTEMD_COLORS=1 systemctl status $word'
+      #Git preview
+      zstyle ':fzf-tab:complete:git-(add|diff|restore):*' fzf-preview 'git diff $word | delta'
+      zstyle ':fzf-tab:complete:git-log:*' fzf-preview 'git log --color=always $word'
+      zstyle ':fzf-tab:complete:git-help:*' fzf-preview 'git help $word | bat -plman --color=always'
+      zstyle ':fzf-tab:complete:git-show:*' fzf-preview 'case "$group" in"commit tag") git show --color=always $word ;;*) git show --color=always $word | delta ;;esac'
+      zstyle ':fzf-tab:complete:git-checkout:*' fzf-preview 'case "$group" in"modified file") git diff $word | delta ;;"recent commit object name") git show --color=always $word | delta ;;*) git log --color=always $word ;;esac'
+
       eval "$(fzf --zsh)"
       eval "$(${pkgs.oh-my-posh}/bin/oh-my-posh init zsh --config ${./zen-omp/zen.toml})"
 

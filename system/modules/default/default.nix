@@ -12,5 +12,6 @@ environment.systemPackages = with pkgs; [
     gotop
     pass
     lshw
+    delta
   ];
 }
