@@ -140,6 +140,7 @@
 
       alias ls='ls --color'
       alias sn='sudo nano'
+      alias snv='sudo -E nvim'
       
       fastfetch
 

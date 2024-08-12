@@ -6,7 +6,7 @@
 
   imports = [
     ../../modules/terminal
-    # ../../modules/nixvim
+    ../../modules/nvim
   ];
   home.stateVersion = "24.05";
   home.packages = [];
