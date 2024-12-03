@@ -23,15 +23,6 @@
   }: {
     formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixpkgs-fmt;
 
-    # nixosConfigurations = {
-    #   server = nixpkgs.lib.nixosSystem {
-    #     specialArgs = {inherit inputs;};
-    #     modules = [
-    #       ./hosts/server/configuration.nix
-    #     ];
-    #   };
-    # };
-
     nixosConfigurations = {
       server = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
@@ -39,6 +30,14 @@
         modules = [
           home-manager.nixosModules.home-manager
           ./system/hosts/server
+        ];
+      };
+      thinkpad = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        specialArgs = inputs;
+        modules = [
+          home-manager.nixosModules.home-manager
+          ./system/hosts/thinkpad
         ];
       };
     };
@@ -49,6 +48,13 @@
         extraSpecialArgs = {inherit inputs;};
         modules = [
           ./homeManager/hosts/server
+        ];
+      };
+      "blakec@thinkpad" = home-manager.lib.homeManagerConfiguration {
+        pkgs = nixpkgs.legacyPackages."x86_64-linux";
+        extraSpecialArgs = {inherit inputs;};
+        modules = [
+          ./homeManager/hosts/thinkpad
         ];
       };
     };
