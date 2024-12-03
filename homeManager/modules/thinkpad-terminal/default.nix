@@ -6,7 +6,6 @@
 
     pkgs.tmuxPlugins.vim-tmux-navigator
     pkgs.tmuxPlugins.continuum
-    # pkgs.tmuxPlugins.tmux-fzf
     pkgs.tmuxPlugins.nord
     pkgs.tmuxPlugins.yank
 
