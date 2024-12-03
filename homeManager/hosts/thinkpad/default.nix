@@ -5,8 +5,7 @@
   home.homeDirectory = "/home/blakec";
 
   imports = [
-    ../../modules/terminal
-    ../../modules/nvim
+    ../../modules/thinkpad-terminal
   ];
   home.stateVersion = "24.05";
   home.packages = [];
